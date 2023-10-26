@@ -1,0 +1,7 @@
+axi_uartlite :
+  name    : axi_uartlite0
+  vendor  : xilinx.com
+  version : 2.0
+  conf :
+    CONFIG.C_BAUDRATE             : 115200
+    CONFIG.C_S_AXI_ACLK_FREQ_HZ_d : 125
