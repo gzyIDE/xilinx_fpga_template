@@ -4,10 +4,11 @@ set repdir  ${syndir}/report
 set tcldir  ${syndir}/xilinx
 source ${tcldir}/config.tcl
 source ${tcldir}/top.tcl
-set prjdir  ${syndir}/xilinx/${TOP}
-set xdcdir  ${syndir}/xdc
-set xpr     ${TOP}.xpr
-set xdc     ${TOP}.xdc
+set prjdir      ${syndir}/xilinx/${TOP}
+set xdcdir      ${syndir}/xdc
+set xpr         ${TOP}.xpr
+set pin_xdc     ${TOP}_pin.xdc
+set timing_xdc  ${TOP}_timing.xdc
 source ${prjdir}/files.tcl
 source ${prjdir}/defines.tcl
 source ${prjdir}/dpi.tcl
@@ -32,8 +33,11 @@ add_files -fileset sources_1 -scan_for_includes ${INCLUDE_DIRS} ${DESIGN_FILES}
 if {[string equal [get_filesets -quiet constrs_1] ""]} {
   create_fileset -constrset constrs_1
 }
-if {[file exists ${xdcdir}/${xdc}]} {
-  add_files -fileset constrs_1 -norecurse ${xdcdir}/${xdc}
+if {[file exists ${xdcdir}/${pin_xdc}]} {
+  add_files -fileset constrs_1 -norecurse ${xdcdir}/${pin_xdc}
+}
+if {[file exists ${xdcdir}/${timing_xdc}]} {
+  add_files -fileset constrs_1 -norecurse ${xdcdir}/${timing_xdc}
 }
 
 # set verilog defines
@@ -45,10 +49,12 @@ if {[file exists ${prjdir}/ip.tcl]} {
 }
 
 # synthesis
+reset_runs [get_runs synth_1]
 launch_runs synth_1 -jobs ${maxcore}
 wait_on_run synth_1
 
 # implementation
+reset_runs [get_runs impl_1]
 launch_runs impl_1 -jobs ${maxcore}
 wait_on_run impl_1
 open_run impl_1

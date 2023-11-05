@@ -1,6 +1,7 @@
 # Initialize design configuration
 set tcldir [exec pwd]/xilinx
 source ${tcldir}/top.tcl
+source ${tcldir}/config.tcl
 source ${tcldir}/${TOP}/files.tcl
 source ${tcldir}/${TOP}/defines.tcl
 source ${tcldir}/${TOP}/dpi.tcl
@@ -30,7 +31,7 @@ set_property top ${TEST_MODULE} [get_filesets -quiet sim_1]
 set_property verilog_define ${DEFINE_LISTS} [get_filesets sim_1]
 
 # set simulation configuration
-set_property -name {xsim.simulate.runtime} -value {1000us} -objects [get_filesets sim_1]
+set_property -name {xsim.simulate.runtime} -value ${runtime} -objects [get_filesets sim_1]
 #set_property -name {xsim.elaborate.mt_level} -value {8} -objects [get_filesets sim_1]
 if { $WAVEFORM == 1 } {
 	set_property -name {xsim.elaborate.debug_level} -value {all} -objects [get_filesets sim_1]

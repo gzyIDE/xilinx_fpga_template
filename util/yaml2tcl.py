@@ -24,15 +24,17 @@ with open(args[1]) as file:
 
         # tcl write
         xci_path = '${ipdir}/' + name + '/' + name + '.xci'
-        ofile.write('if {[file exists ' + xci_path + ']} {\n' )
-        ofile.write('  read_ip ' + xci_path + '\n')
-        ofile.write('} else {\n')
-        ofile.write('  create_ip -name ' + k + ' -vendor ' + vendor + ' -version ' + str(version) + ' -module_name ' + name + '\n')
-        ofile.write('  set_property -dict [list \\\n')
+        ofile.write('if {[get_ips ' + name + '] == {} } {\n')
+        ofile.write('  if {[file exists ' + xci_path + ']} {\n' )
+        ofile.write('    read_ip ' + xci_path + '\n')
+        ofile.write('  } else {\n')
+        ofile.write('    create_ip -name ' + k + ' -vendor ' + vendor + ' -version ' + str(version) + ' -module_name ' + name + '\n')
+        ofile.write('    set_property -dict [list \\\n')
         for c in ip['conf']:
-            ofile.write('    ' + c + ' ' + str(conf[c]) + ' \\\n')
-        ofile.write('  ] [get_ips ' + name + ']\n')
-        ofile.write('  generate_target all [get_files ' + xci_path + ']\n')
+            ofile.write('      ' + c + ' ' + str(conf[c]) + ' \\\n')
+        ofile.write('    ] [get_ips ' + name + ']\n')
+        ofile.write('    generate_target all [get_files ' + xci_path + ']\n')
+        ofile.write('  }\n')
         ofile.write('}\n')
 
 ofile.close()
